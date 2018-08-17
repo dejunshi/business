@@ -1,0 +1,17 @@
+#weblogic
+#!/bin/bash
+ip=$2
+ips=$1
+ability=(${ips//,/ })
+#ability_num=${#ability[@]}
+pid=`sudo ps -ef | grep -i weblogic | grep -v grep | awk '{print $2}'`
+pwd=`sudo pwdx $pid | grep -oP "[^ ]+(?=\/bin)"`
+log=`sudo find $pwd -name *.log* | xargs -n1000`
+#today=`/bin/date -d today +"%Y%m%d"`
+yesterday=`/bin/date -d yesterday +"%Y-%m-%d"`
+
+for i in ${ability[@]}
+do
+  num=`sudo cat $log | grep "$yesterday" | grep "$i" | wc -l`
+  echo "DATE:$yesterday  IP:$ip  $i:$num"
+done
